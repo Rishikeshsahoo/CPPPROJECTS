@@ -49,7 +49,7 @@ int largerNumber(int num)
 
 int main()
 {
-    int n=1234;
+    int n=125436;
     cout<<largerNumber(n);
     return 0;
 }
