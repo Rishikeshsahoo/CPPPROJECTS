@@ -32,6 +32,7 @@ bool solve(int mat[9][9],int i,int j)
         if(isSafe(mat,i,j,k))
         {
             mat[i][j]=k;
+            //checks the 3X3 cube, the row and the column only
             bool canSolve=solve(mat,i,j+1);
             if(canSolve) return true;
             mat[i][j]=0;
