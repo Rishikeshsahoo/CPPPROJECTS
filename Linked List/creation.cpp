@@ -109,6 +109,20 @@ node* iReverse(node* head)
 
 }
 
+//recursive approach of reversal of a LL
+node* rReverse(node* head)
+{
+    if(head==nullptr || head->next==nullptr)
+    return head;
+
+    node* newhead=rReverse(head->next);
+
+    head->next->next=head;
+    head->next=nullptr;
+
+    return newhead;
+} 
+
 int main()
 {
     
@@ -118,7 +132,7 @@ int main()
     insertAtTail(head,3);
     insertAtHead(head,4);
     display(head);
-    node *newhead=iReverse(head);
+    node *newhead=rReverse(head);
     display(newhead);
 
     
