@@ -123,6 +123,27 @@ node* rReverse(node* head)
     return newhead;
 } 
 
+node* reverseKNodes(node* & head,int k)
+{
+    node* currentptr=head;
+    node* previous=nullptr;
+    node* nextptr;
+    int count=0;
+    while(currentptr!=nullptr && count<k)
+    {
+        nextptr=currentptr->next;
+        currentptr->next=previous;
+        previous=currentptr;
+        currentptr=nextptr;
+        count++;
+    }
+
+    if(nextptr!=nullptr)
+    head->next = reverseKNodes(nextptr,k);
+
+    return previous;
+}
+
 int main()
 {
     
@@ -132,9 +153,11 @@ int main()
     insertAtTail(head,3);
     insertAtHead(head,4);
     display(head);
-    node *newhead=rReverse(head);
-    display(newhead);
+    
+    head=reverseKNodes(head,2);
+    display(head);
 
+    
     
     return 0;
 }
