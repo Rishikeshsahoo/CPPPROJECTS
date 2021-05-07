@@ -144,6 +144,60 @@ node* reverseKNodes(node* & head,int k)
     return previous;
 }
 
+bool detectionOfCycle(node* head)
+{
+    node* slow=head;
+    node* fast=head;
+
+    do
+    {
+        slow=slow->next;
+        fast=fast->next->next;
+        if(slow==fast)
+        return true;
+    }while(fast!=nullptr || fast->next!=nullptr);
+    return false;
+}
+void makeCycle(node *head,int pos)
+{
+    int count=0;
+    node *cycleStart,*temp=head;
+    while(temp->next!=nullptr)
+    {
+        if(count==pos)
+        {
+            cycleStart=temp;
+        }
+        count++;
+        temp=temp->next;
+    }
+    temp->next=cycleStart;
+}
+
+void removeCycle(node* &head)
+{
+    node *slow=head,*fast=head;
+    if(!detectionOfCycle(head))
+    {
+        
+        cout<<"cycle not present";
+    }
+    else
+    {
+        do
+        {
+            slow=slow->next;
+            fast=fast->next->next;
+        }while(slow!=fast);
+        while(slow->next!=fast->next)
+        {
+            slow=slow->next;
+            fast=fast->next->next;
+        }
+        slow->next=nullptr;
+    }
+}
+
 int main()
 {
     
@@ -151,10 +205,13 @@ int main()
     insertAtTail(head,1);
     insertAtTail(head,2);
     insertAtTail(head,3);
-    insertAtHead(head,4);
-    display(head);
+    insertAtTail(head,4);
+    insertAtTail(head,7);
+    insertAtTail(head,9);
     
-    head=reverseKNodes(head,2);
+    
+    makeCycle(head,3);
+    
     display(head);
 
     
