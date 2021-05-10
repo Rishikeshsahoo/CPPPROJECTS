@@ -144,20 +144,24 @@ node* reverseKNodes(node* & head,int k)
     return previous;
 }
 
+/* detecte weather a cycle is present
+ in a LL or not*/
 bool detectionOfCycle(node* head)
 {
     node* slow=head;
     node* fast=head;
 
-    do
+    while(fast!=nullptr && fast->next!=nullptr)
     {
-        slow=slow->next;
         fast=fast->next->next;
+        slow=slow->next;
         if(slow==fast)
         return true;
-    }while(fast!=nullptr || fast->next!=nullptr);
+    }
     return false;
 }
+
+//creates a cyclic LL at a perticular point
 void makeCycle(node *head,int pos)
 {
     int count=0;
@@ -173,7 +177,7 @@ void makeCycle(node *head,int pos)
     }
     temp->next=cycleStart;
 }
-
+//function that removes cycle from a LL
 void removeCycle(node* &head)
 {
     node *slow=head,*fast=head;
@@ -189,32 +193,168 @@ void removeCycle(node* &head)
             slow=slow->next;
             fast=fast->next->next;
         }while(slow!=fast);
+        fast=head;
         while(slow->next!=fast->next)
         {
             slow=slow->next;
-            fast=fast->next->next;
+            fast=fast->next;
         }
         slow->next=nullptr;
     }
+}
+
+
+//this function return the length of LL
+int length(node *head)
+{
+    int count=0;
+    while(head!=nullptr)
+    {
+        count++;
+        head=head->next;
+    }
+    return count;
+}
+
+//this fuction gives the position of intersection in 2 LL
+int intersectionDetection(node *head1,node *head2)
+{
+    int l1=length(head1);
+    int l2=length(head2);
+    node *ptr1,*ptr2;
+    if(l1>l2)
+    {
+        ptr1=head1;
+        ptr2=head2;
+    }
+    else
+    {
+        ptr1=head2;
+        ptr2=head1;
+    }
+    int d=abs(l1-l2);
+    while(d)
+    {
+        ptr1=ptr1->next;
+        d--;
+        if(ptr1->next==nullptr)
+        return -1;
+    }
+    while(ptr1!=nullptr && ptr2!=nullptr)
+    {
+        if(ptr1==ptr2)
+        return ptr1->data;
+        ptr1=ptr1->next;
+        ptr2=ptr2->next;
+    }
+    return -1;
+}
+
+//this function makes an intersection
+//between 2 LL at a perticular point
+void makeIntersection(node* &head1,node* &head2,int pos)
+{
+    pos--;
+    node* temp1=head1;
+    node* temp2=head2;
+    while(pos)
+    {
+        temp1=temp1->next;
+        pos--;
+    } 
+    while(temp2->next!=nullptr)
+    {
+        temp2=temp2->next;
+    }
+    temp2->next=temp1;
+}
+
+//merging 2 sorted LL
+node* mergeLinkedList(node* &head1,node* &head2)
+{
+    node* ptr1=head1;
+    node* ptr2=head2;
+    node* trashNode=new node(-1);
+    node *ptr3=trashNode;
+    while(ptr1!=nullptr && ptr2!=nullptr)
+    {
+        if(ptr1->data<ptr2->data)
+        {
+            ptr3->next=ptr1;
+            ptr1=ptr1->next;
+        }
+        else
+        {
+            ptr3->next=ptr2;
+            ptr2=ptr2->next;
+        }
+        ptr3=ptr3->next;
+        
+    }
+    while(ptr1!=nullptr)
+    {
+        ptr3->next=ptr1;
+        ptr1=ptr1->next;
+        ptr3=ptr3->next;
+    }
+    while(ptr2!=nullptr)
+    {
+        ptr3->next=ptr2;
+        ptr2=ptr2->next;
+        ptr3=ptr3->next;
+    }
+    
+    return trashNode->next;
+
+}
+
+//merger LL recursive
+node* mergeRecursive(node* head1,node*head2)
+{
+    if(head1==nullptr)
+    {
+        return head2;
+    }
+    if(head2==nullptr)
+    {
+        return head1;
+    }
+    
+
+    node* result;
+    if(head1->data<head2->data)
+    {
+        result = head1;
+        result->next=mergeRecursive(head1->next,head2);
+    }
+
+    else
+    {
+        result = head2;
+        result->next=mergeRecursive(head1,head2->next);
+    }
+    return result;
 }
 
 int main()
 {
     
     node *head=nullptr;
+    node *head2=nullptr;
     insertAtTail(head,1);
-    insertAtTail(head,2);
-    insertAtTail(head,3);
     insertAtTail(head,4);
+    insertAtTail(head,6);
     insertAtTail(head,7);
     insertAtTail(head,9);
-    
-    
-    makeCycle(head,3);
-    
-    display(head);
+
+    insertAtTail(head2,2);
+    insertAtTail(head2,3);
+    insertAtTail(head2,5);
+    insertAtTail(head2,8);
+    insertAtTail(head2,10);
 
     
+    display(mergeRecursive(head,head2));
     
     return 0;
 }

@@ -77,6 +77,41 @@ void display(node* head)
     }
     cout<<"->NULL\n";
 }
+int length(node *head)
+{
+    node *temp=head;
+    int count=0;
+    while(temp!=nullptr)
+    {
+        temp=temp->next;
+        count++;
+    }
+    return count;
+}
+
+node* appendKNodes(node* &head,int k)
+{
+    int len=length(head);
+    node* newHead;
+    node* newtail;
+    node* tail=head;
+    int count=1;
+    k=k%len;
+    while(tail->next!=nullptr)
+    {
+        if(count==len-k)
+        {
+            newtail=tail;
+            newHead=tail->next;
+        }
+        count++;
+        tail=tail->next;
+    }
+    newtail->next=nullptr;
+    tail->next=head;
+
+    return newHead;
+}
 
 int main()
 {
@@ -86,8 +121,10 @@ int main()
     insertAtTail(head,7);
     insertAtTail(head,9);
     insertAtTail(head,19);
-    display(head);
-    deletion(head,3);
-    display(head);
+    
+    
+    display(appendKNodes(head,3));
+
+
     return 0;
 }
